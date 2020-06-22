@@ -32,12 +32,26 @@ if __name__ == "__main__":
     EPOCH_LENGTH = 2000
     # 开始使用1e-4训练，20世代后使用1e-5训练
     Learning_rate = 1e-4
+    
+    # BBoxUtility是在utils.py中定义的一个类。主要包括进行top_k筛选、nms操作、iou计算、bbox编解码等。
     bbox_util = BBoxUtility(overlap_threshold=config.rpn_max_overlap,ignore_threshold=config.rpn_min_overlap)
     annotation_path = '2007_train.txt'
-
-    #-------------------------------------------#
-    #   权值文件的下载请看README
-    #-------------------------------------------#
+    
+    ###############################################
+    # 模型定义
+    ###############################################
+    """
+    inputs = Input(shape=(None, None, 3))
+    roi_input = Input(shape=(None, 4))
+    inputs -> nets.resnet.ResNet50() -> base_layers
+        其中def ResNet50(inputs): ZeroPadding(3,3) -> C64-7x7+BA+P -> ... -> stage4 -> x  
+    base_layers, num_anchors -> get_rpn() -> rpn
+        其中get_rpn()：
+    model_rpn = Model(inputs, rpn[:2])
+    base_layers, roi_input, config.num_rois, nb_classes=num_classes -> get_classifier() -> classifier
+    model_classifier = Model([inputs, roi_input], classifier)
+    model_all = Model([inputs, roi_input], rpn[:2]+classifier)
+    """
     model_rpn, model_classifier,model_all = get_model(config,NUM_CLASSES)
     base_net_weights = "model_data/voc_weights.h5"
     
