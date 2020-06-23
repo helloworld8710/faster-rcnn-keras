@@ -137,6 +137,10 @@ if __name__ == "__main__":
             
             R = results[0][:, 2:]
 
+            # calc_iou(...)
+            # X = np.array(x_roi)
+            # Y1 = np.array(y_class_num)
+            # Y2 = np.concatenate([np.array(y_class_regr_label),np.array(y_class_regr_coords)],axis=1)
             X2, Y1, Y2, IouS = calc_iou(R, config, boxes[0], width, height, NUM_CLASSES)
 
             if X2 is None:
